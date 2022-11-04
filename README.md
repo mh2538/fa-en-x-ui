@@ -1,34 +1,34 @@
 # x-ui
 
-支持多协议多用户的 xray 面板
+پانل xray با پشتیبانی از چند پروتکل چند کاربره
 
-# 功能介绍
+# امکانات
 
-- 系统状态监控
-- 支持多用户多协议，网页可视化操作
-- 支持的协议：vmess、vless、trojan、shadowsocks、dokodemo-door、socks、http
-- 支持配置更多传输配置
-- 流量统计，限制流量，限制到期时间
-- 可自定义 xray 配置模板
-- 支持 https 访问面板（自备域名 + ssl 证书）
-- 支持一键SSL证书申请且自动续签
-- 更多高级配置项，详见面板
+- نظارت بر وضعیت سیستم
+- پشتیبانی از پروتکل چند کاربره، عملیات تجسم صفحه وب
+- پروتکل های پشتیبانی شده: vmess، vless، trojan، shadowsocks، dokodemo-door، socks، http
+- پشتیبانی برای پیکربندی تنظیمات انتقال بیشتر
+- آمار ترافیک، محدودیت ترافیک، محدود کردن زمان انقضا
+- قالب های پیکربندی xray قابل تنظیم
+- پشتیبانی از پنل دسترسی https (نام دامنه + گواهی ssl خود را بیاورید)
+- پشتیبانی از برنامه گواهینامه SSL با یک کلیک و تمدید خودکار
+- برای موارد پیکربندی پیشرفته تر، برای جزئیات به پانل مراجعه کنید
 
-# 安装&升级
+# نصب و ارتقا دهید
 
 ```
 bash <(curl -Ls https://raw.githubusercontent.com/vaxilu/x-ui/master/install.sh)
 ```
 
-## 手动安装&升级
+## نصب و ارتقاء دستی
 
-1. 首先从 https://github.com/vaxilu/x-ui/releases 下载最新的压缩包，一般选择 `amd64`架构
-2. 然后将这个压缩包上传到服务器的 `/root/`目录下，并使用 `root`用户登录服务器
+1. ابتدا آخرین بسته فشرده را از https://github.com/vaxilu/x-ui/releases دانلود کنید، به طور کلی معماری «amd64» را انتخاب کنید.
+2. سپس بسته فشرده شده را در دایرکتوری «/root/» سرور آپلود کنید و از کاربر «root» برای ورود به سرور استفاده کنید.
 
-> 如果你的服务器 cpu 架构不是 `amd64`，自行将命令中的 `amd64`替换为其他架构
+> اگر معماری cpu سرور شما "amd64" نیست، "amd64" را در دستور با معماری دیگری جایگزین کنید.
 
 ```
-cd /root/
+سی دی /روت/
 rm x-ui/ /usr/local/x-ui/ /usr/bin/x-ui -rf
 tar zxvf x-ui-linux-amd64.tar.gz
 chmod +x x-ui/x-ui x-ui/bin/xray-linux-* x-ui/x-ui.sh
@@ -36,108 +36,108 @@ cp x-ui/x-ui.sh /usr/bin/x-ui
 cp -f x-ui/x-ui.service /etc/systemd/system/
 mv x-ui/ /usr/local/
 systemctl daemon-reload
-systemctl enable x-ui
-systemctl restart x-ui
+systemctl x-ui را فعال کنید
+systemctl x-ui را ریستارت کنید
 ```
 
-## 使用docker安装
+## با استفاده از docker نصب کنید
 
-> 此 docker 教程与 docker 镜像由[Chasing66](https://github.com/Chasing66)提供
+> این آموزش داکر و تصویر داکر توسط [Chasing66] ارائه شده است (https://github.com/Chasing66)
 
-1. 安装docker
+1. docker را نصب کنید
 
-```shell
+``پوسته
 curl -fsSL https://get.docker.com | sh
 ```
 
-2. 安装x-ui
+2. x-ui را نصب کنید
 
-```shell
+``پوسته
 mkdir x-ui && cd x-ui
 docker run -itd --network=host \
     -v $PWD/db/:/etc/x-ui/ \
     -v $PWD/cert/:/root/cert/ \
-    --name x-ui --restart=unless-stopped \
-    enwaiax/x-ui:latest
+    --name x-ui -- restart = مگر اینکه متوقف شود \
+    enwaiax/x-ui:جدیدترین
 ```
 
-> Build 自己的镜像
+> تصویر خود را بسازید
 
-```shell
+``پوسته
 docker build -t x-ui .
 ```
 
-## SSL证书申请
+## برنامه گواهی SSL
 
-> 此功能与教程由[FranzKafkaYu](https://github.com/FranzKafkaYu)提供
+> این عملکرد و آموزش توسط [FranzKafkaYu] ارائه شده است (https://github.com/FranzKafkaYu)
 
-脚本内置SSL证书申请功能，使用该脚本申请证书，需满足以下条件:
+این اسکریپت دارای یک تابع برنامه کاربردی گواهی SSL داخلی است. برای استفاده از این اسکریپت برای درخواست گواهی، باید شرایط زیر وجود داشته باشد:
 
-- 知晓Cloudflare 注册邮箱
-- 知晓Cloudflare Global API Key
-- 域名已通过cloudflare进行解析到当前服务器
+- آدرس ایمیل ثبت شده در Cloudflare را بشناسید
+- کلید Cloudflare Global API را بشناسید
+- نام دامنه به سرور فعلی از طریق cloudflare حل شده است
 
-获取Cloudflare Global API Key的方法:
+نحوه دریافت کلید API جهانی Cloudflare:
     ![](media/bda84fbc2ede834deaba1c173a932223.png)
     ![](media/d13ffd6a73f938d1037d0708e31433bf.png)
 
-使用时只需输入 `域名`, `邮箱`, `API KEY`即可，示意图如下：
+هنگام استفاده، فقط "نام دامنه"، "ایمیل"، "کلید API" را وارد کنید، نمودار به شرح زیر است:
         ![](media/2022-04-04_141259.png)
 
-注意事项:
+موارد احتیاط:
 
-- 该脚本使用DNS API进行证书申请
-- 默认使用Let'sEncrypt作为CA方
-- 证书安装目录为/root/cert目录
-- 本脚本申请证书均为泛域名证书
+- اسکریپت از DNS API برای درخواست گواهی استفاده می کند
+- به طور پیش فرض از Let'sEncrypt به عنوان طرف CA استفاده کنید
+- دایرکتوری نصب گواهی دایرکتوری /root/cert است
+- گواهینامه های درخواست شده توسط این اسکریپت همه گواهینامه های نام دامنه عمومی هستند
 
-## Tg机器人使用（开发中，暂不可使用）
+استفاده از ربات ##Tg (در حال توسعه، به طور موقت در دسترس نیست)
 
-> 此功能与教程由[FranzKafkaYu](https://github.com/FranzKafkaYu)提供
+> این عملکرد و آموزش توسط [FranzKafkaYu] ارائه شده است (https://github.com/FranzKafkaYu)
 
-X-UI支持通过Tg机器人实现每日流量通知，面板登录提醒等功能，使用Tg机器人，需要自行申请
-具体申请教程可以参考[博客链接](https://coderfan.net/how-to-use-telegram-bot-to-alarm-you-when-someone-login-into-your-vps.html)
-使用说明:在面板后台设置机器人相关参数，具体包括
+X-UI از اعلان ترافیک روزانه، یادآوری ورود به پنل و سایر عملکردها از طریق ربات Tg پشتیبانی می کند. برای استفاده از ربات Tg، باید خودتان درخواست دهید
+برای آموزش های کاربردی خاص، لطفاً به [لینک وبلاگ](https://coderfan.net/how-to-use-telegram-bot-to-alarm-you-when-someone-login-into-your-vps.html مراجعه کنید. )
+دستورالعمل استفاده: پارامترهای مربوط به ربات را در پس زمینه پانل تنظیم کنید، از جمله
 
-- Tg机器人Token
-- Tg机器人ChatId
-- Tg机器人周期运行时间，采用crontab语法  
+- توکن ربات Tg
+- Tg Robot ChatId
+- زمان اجرا چرخه ربات Tg، در نحو crontab
 
-参考语法：
-- 30 * * * * * //每一分的第30s进行通知
-- @hourly      //每小时通知
-- @daily       //每天通知（凌晨零点整）
-- @every 8h    //每8小时通知  
+نحو مرجع:
+- 30 * * * * * // در 30 ثانیه هر نقطه اطلاع دهید
+- @hourly // اطلاع رسانی ساعتی
+- @daily // اطلاع رسانی روزانه (00:00 صبح)
+- @هر 8 ساعت // اعلان هر 8 ساعت
 
-TG通知内容：
-- 节点流量使用
-- 面板登录提醒
-- 节点到期提醒
-- 流量预警提醒  
+محتوای اعلان TG:
+- استفاده از ترافیک گره
+- یادآوری ورود به پنل
+- یادآوری انقضای گره
+- یادآوری هشدار ترافیک
 
-更多功能规划中...
-## 建议系统
+ویژگی های بیشتر برنامه ریزی شده است ...
+## سیستم پیشنهاد
 
 - CentOS 7+
-- Ubuntu 16+
-- Debian 8+
+- اوبونتو 16+
+- دبیان 8+
 
-# 常见问题
+#مشکل رایج
 
-## 从 v2-ui 迁移
+## مهاجرت از v2-ui
 
-首先在安装了 v2-ui 的服务器上安装最新版 x-ui，然后使用以下命令进行迁移，将迁移本机 v2-ui 的 `所有 inbound 账号数据`至 x-ui，`面板设置和用户名密码不会迁移`
+ابتدا آخرین نسخه x-ui را روی سروری که v2-ui نصب شده است نصب کنید، و سپس از دستور زیر برای مهاجرت استفاده کنید، که «تمام داده‌های حساب ورودی» v2-ui محلی را به x-ui، «پنل» منتقل می‌کند. تنظیمات و نام کاربری و رمز عبور" منتقل نمی شود
 
-> 迁移成功后请 `关闭 v2-ui`并且 `重启 x-ui`，否则 v2-ui 的 inbound 会与 x-ui 的 inbound 会产生 `端口冲突`
+> پس از موفقیت آمیز بودن انتقال، لطفاً "v2-ui" را ببندید و x-ui را مجددا راه اندازی کنید، در غیر این صورت ورودی v2-ui باعث "تداخل پورت" با ورودی x-ui می شود.
 
 ```
 x-ui v2-ui
 ```
 
-## issue 关闭
+شماره ## بسته شد
 
-各种小白问题看得血压很高
+همه انواع مشکلات کوچک سفید فشار خون بالا را مشاهده می کنند
 
-## Stargazers over time
+## ستارگان در طول زمان
 
-[![Stargazers over time](https://starchart.cc/vaxilu/x-ui.svg)](https://starchart.cc/vaxilu/x-ui)
+[![ستاره‌نگاران در طول زمان](https://starchart.cc/vaxilu/x-ui.svg)](https://starchart.cc/vaxilu/x-ui)
