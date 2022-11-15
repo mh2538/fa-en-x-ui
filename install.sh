@@ -8,7 +8,7 @@ plain='\033[0m'
 cur_dir=$(pwd)
 
 # check root
-[[ $EUID -ne 0 ]] && echo -e "${red}错误：${plain} 必须使用root用户运行此脚本！\n" && exit 1
+[[ $EUID -ne 0 ]] && echo -e "${red}Error：${plain} The root user must be used to run this script!\n" && exit 1
 
 # check os
 if [[ -f /etc/redhat-release ]]; then
@@ -26,7 +26,7 @@ elif cat /proc/version | grep -Eqi "ubuntu"; then
 elif cat /proc/version | grep -Eqi "centos|red hat|redhat"; then
     release="centos"
 else
-    echo -e "${red}نسخه سیستم شناسایی نشد، لطفا با نویسنده اسکریپت تماس بگیرید!${plain}\n" && exit 1
+    echo -e "${red}System version not detected, please contact the script author!${plain}\n" && exit 1
 fi
 
 arch=$(arch)
@@ -39,13 +39,13 @@ elif [[ $arch == "s390x" ]]; then
     arch="s390x"
 else
     arch="amd64"
-    echo -e "${red}检测架构失败，使用默认架构: ${arch}${plain}"
+    echo -e "${red}Failed to detect schema, use default schema: ${arch}${plain}"
 fi
 
-echo "架构: ${arch}"
+echo "architecture: ${arch}"
 
 if [ $(getconf WORD_BIT) != '32' ] && [ $(getconf LONG_BIT) != '64' ]; then
-    echo "این نرم افزار از سیستم 32 بیتی (x86) پشتیبانی نمی کند، لطفا از سیستم 64 بیتی (x86_64) استفاده کنید، اگر سیستم شما اشتباه تشخیص داده شده است، لطفا با نویسنده این اسکریپت تماس بگیرید."
+    echo "This software does not support 32-bit system (x86), please use 64-bit system (x86_64), if the detection is wrong, please contact the author"
     exit -1
 fi
 
@@ -61,15 +61,15 @@ fi
 
 if [[ x"${release}" == x"centos" ]]; then
     if [[ ${os_version} -le 6 ]]; then
-        echo -e "${red}لطفاً از CentOS 7 یا بالاتر استفاده کنید! ${plain}\n" && exit 1
+        echo -e "${red}Please use CentOS 7 or later system! ${plain}\n" && exit 1
     fi
 elif [[ x"${release}" == x"ubuntu" ]]; then
     if [[ ${os_version} -lt 16 ]]; then
-        echo -e "${red}لطفا از اوبونتو 16 یا بالاتر استفاده کنید! ${plain}\n" && exit 1
+        echo -e "${red}Please use Ubuntu 16 or later system! ${plain}\n" && exit 1
     fi
 elif [[ x"${release}" == x"debian" ]]; then
     if [[ ${os_version} -lt 8 ]]; then
-        echo -e "${red}لطفا از دبیان 8 یا بالاتر استفاده کنید!${plain}\n" && exit 1
+        echo -e "${red}Please use Debian 8 or later system!${plain}\n" && exit 1
     fi
 fi
 
@@ -83,22 +83,22 @@ install_base() {
 
 #This function will be called when user installed x-ui out of sercurity
 config_after_install() {
-    echo -e "${yellow}لطفاْ پس از پایان نصب/به‌روزرسانی، پورت و رمز عبور حساب کاربری را تغییر دهید.${plain}"
-    read -p "ادامه می‌دهید?[y/n]": config_confirm
+    echo -e "${yellow}For security reasons, port and passwords must be changed after installation/update.${plain}"
+    read -p "Are you sure to continue??[y/n]": config_confirm
     if [[ x"${config_confirm}" == x"y" || x"${config_confirm}" == x"Y" ]]; then
-        read -p "نام اکانت هود را وارد کنید:" config_account
-        echo -e "${yellow}نام حساب کاربری شما:${config_account}${plain}"
-        read -p "رمزعبور خود را وارد کنید:" config_password
-        echo -e "${yellow}رمز عبور شما:${config_password}${plain}"
-        read -p "پورت دسترسی پنل را وارد کنید:" config_port
-        echo -e "${yellow}پورت دسترسی شما:${config_port}${plain}"
-        echo -e "${yellow}تایید تنطمیات${plain}"
+        read -p "Please enter your account name::" config_account
+        echo -e "${yellow}Your account name will be set to:${config_account}${plain}"
+        read -p "Please enter your account password:" config_password
+        echo -e "${yellow}Your account password will be set to:${config_password}${plain}"
+        read -p "Please enter the panel access port:" config_port
+        echo -e "${yellow}Your panel access port will be set to:${config_port}${plain}"
+        echo -e "${yellow}Confirm setting${plain}"
         /usr/local/x-ui/x-ui setting -username ${config_account} -password ${config_password}
-        echo -e "${yellow}تخصیص رمزعبور به اکانت شما با موفقیت انجام شد${plain}"
+        echo -e "${yellow}The account password is set${plain}"
         /usr/local/x-ui/x-ui setting -port ${config_port}
-        echo -e "${yellow}تنظیمات پورت پتل با موفقیت  انجام شد${plain}"
+        echo -e "${yellow}Panel port setting completed${plain}"
     else
-        echo -e "${red}فرآیند نصب کنسل شد. تمام تنطیمات برابر مقادیر پیس‌فرض هستند. لطفاْ‌آنها را تغییر دهید.${plain}"
+        echo -e "${red}Canceled, all setting items are default settings, please modify in time.${plain}"
     fi
 }
 
@@ -109,22 +109,22 @@ install_x-ui() {
     if [ $# == 0 ]; then
         last_version=$(curl -Ls "https://api.github.com/repos/vaxilu/x-ui/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
         if [[ ! -n "$last_version" ]]; then
-            echo -e "${red}شناسایی نسخه x-ui ناموفق بود، ممکن است مشکل مربوط به محدودیت‌های Github API باشد، لطفاً بعداً دوباره امتحان کنید، یا به صورت دستی نسخه x-ui را برای نصب مشخص کنید.${plain}"
+            echo -e "${red}Failed to detect the x-ui version, it may be beyond the limit of Github API, please try again later, or manually specify the x-ui version to install${plain}"
             exit 1
         fi
-        echo -e "آخرین نسخه x-ui شناسایی شد:${last_version}نصب را آغار کنید"
+        echo -e "Detected the latest version of x-ui:${last_version}start installation"
         wget -N --no-check-certificate -O /usr/local/x-ui-linux-${arch}.tar.gz https://github.com/vaxilu/x-ui/releases/download/${last_version}/x-ui-linux-${arch}.tar.gz
         if [[ $? -ne 0 ]]; then
-            echo -e "${red}x-ui دانلود نشد، لطفاً مطمئن شوید که سرور شما می‌تواند فایل‌های Github را دانلود کند${plain}"
+            echo -e "${red}Download x-ui failed, please make sure your server can download files from Github${plain}"
             exit 1
         fi
     else
         last_version=$1
         url="https://github.com/vaxilu/x-ui/releases/download/${last_version}/x-ui-linux-${arch}.tar.gz"
-        echo -e "آغاز نصب x-ui v$1"
+        echo -e "Start installing x-ui$1"
         wget -N --no-check-certificate -O /usr/local/x-ui-linux-${arch}.tar.gz ${url}
         if [[ $? -ne 0 ]]; then
-            echo -e "${red}x-ui v$1 دانلود نشد، لطفاً مطمئن شوید که این نسخه وجود دارد${plain}"
+            echo -e "${red}Download x-ui v$1 failed, please make sure this version exists${plain}"
             exit 1
         fi
     fi
@@ -142,34 +142,29 @@ install_x-ui() {
     chmod +x /usr/local/x-ui/x-ui.sh
     chmod +x /usr/bin/x-ui
     config_after_install
-    #echo -e "如果是全新安装，默认网页端口为 ${green}54321${plain}，用户名和密码默认都是 ${green}admin${plain}"
-    #echo -e "请自行确保此端口没有被其他程序占用，${yellow}并且确保 54321 端口已放行${plain}"
-    #    echo -e "若想将 54321 修改为其它端口，输入 x-ui 命令进行修改，同样也要确保你修改的端口也是放行的"
-    #echo -e ""
-    #echo -e "如果是更新面板，则按你之前的方式访问面板"
-    #echo -e ""
+  
     systemctl daemon-reload
     systemctl enable x-ui
     systemctl start x-ui
-    echo -e "${green}x-ui v${last_version}${plain} نصب کامل و پنل راه اندازی شد，"
+    echo -e "${green}x-ui v${last_version}${plain} The installation is complete, the panel is activated,，"
     echo -e ""
-    echo -e "x-ui نحوه استفاده از اسکریپت مدیریت: "
+    echo -e "How to use x-ui management script "
     echo -e "----------------------------------------------"
-    echo -e "x-ui              - نمایش منوی مدیریت (عملکردهای بیشتر)"
-    echo -e "x-ui start        - پانل x-ui را راه اندازی کنید"
-    echo -e "x-ui stop         - پانل x-ui را متوقف کنید"
-    echo -e "x-ui restart      - پانل x-ui را مجددا راه اندازی کنید"
-    echo -e "x-ui status       - وضعیت x-ui را مشاهده کنید"
-    echo -e "x-ui enable       - x-ui را تنظیم کنید تا به طور خودکار در هنگام بوت اجرا شود"
-    echo -e "x-ui disable      - لغو اجرای خودکار x-ui"
-    echo -e "x-ui log          - مشاهده گزارش‌های x-ui"
-    echo -e "x-ui v2-ui        - اطلاعات حساب v2-ui این دستگاه را به x-ui منتقل کنید"
-    echo -e "x-ui update       - پانل x-ui را به روز کنید"
-    echo -e "x-ui install      - نصب پنل x-ui"
-    echo -e "x-ui uninstall    - پانل x-ui را حذف کنید"
+    echo -e "x-ui              - Show admin menu (more features)"
+    echo -e "x-ui start        - Start the x-ui panel"
+    echo -e "x-ui stop         - Stop x-ui panel"
+    echo -e "x-ui restart      - Restart the x-ui panel"
+    echo -e "x-ui status       - View x-ui status"
+    echo -e "x-ui enable       - Set x-ui to start automatically at boot"
+    echo -e "x-ui disable      - Cancel x-ui autostart"
+    echo -e "x-ui log          - View x-ui logs"
+    echo -e "x-ui v2-ui        - Migrate the v2-ui account data of this machine to x-ui"
+    echo -e "x-ui update       - Update x-ui panel"
+    echo -e "x-ui install      - Install the x-ui panel"
+    echo -e "x-ui uninstall    - Uninstall the x-ui panel"
     echo -e "----------------------------------------------"
 }
 
-echo -e "${green}نصب را آغاز کنید${plain}"
+echo -e "${green}Start installation${plain}"
 install_base
 install_x-ui $1
